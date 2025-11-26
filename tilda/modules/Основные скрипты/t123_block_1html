@@ -1,0 +1,6 @@
+<!-- t123_block_1 #rec1611838901 Header-->
+ 
+<script>
+    let user_token = '5d4d5bbe173f720ec3d3df0779477123' //API-ключ пользователя
+    let partner_token = 'a5w6uwkmnkttn9t6epp4'
+</script>

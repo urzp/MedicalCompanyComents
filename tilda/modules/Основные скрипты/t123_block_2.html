@@ -1,0 +1,42 @@
+<!-- t123_block_2 #rec1612266581  Footer-->
+
+<script>
+    let coments
+    let staff
+
+    async function getStaff(){
+        let result = await fetch('https://api.yclients.com/api/v1/company/421068/staff', {  
+            method: 'GET',  
+            headers: {  
+                'Accept':'application/vnd.yclients.v2+json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${partner_token}, User ${user_token}`
+            },  
+        })
+        result = await result.json()
+        if(result.success){ staff = result.data }
+        return result
+    }
+
+    async function getComments(){
+        let result = await fetch('https://api.yclients.com/api/v1/comments/421068', {  
+            method: 'GET',  
+            headers: {  
+                'Accept':'application/vnd.yclients.v2+json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${partner_token}, User ${user_token}`
+            },  
+        })
+        result = await result.json()
+        if(result.success){ coments = result.data }
+    }
+
+    async function getStaffComents(id_staff){
+        if(!coments){ await getComments() }
+        let result = await coments.filter((item)=>{
+            return item.master_id == 1225474
+        })
+        return result
+    }
+
+</script>

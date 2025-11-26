@@ -1,0 +1,90 @@
+<!-- zero_blok_1 #rec1612673191 -->
+
+<div class="staff_list">
+    <div class="header_staff_list">
+        <div class="staff_list_id header">ID</div>
+        <div class="staff_list_name header">Имя</div>
+        <div class="staff_list_specialization header">Специализация</div>
+        <div class="staff_list_avatar header">Фото</div>
+    </div>
+    <div class="staff_list_data">
+
+    </div>
+</div>
+
+<style>
+    .staff_list{
+        font-family: 'TildaSans', Arial, sans-serif;
+    }
+
+    .header_staff_list, .staff_element{
+        display: flex;
+        align-items: center;
+    }
+
+    .staff_list_data{
+        overflow-y: scroll;
+        background-color: #ffffff;
+        height: 800px;
+    }
+
+    .staff_element{
+        margin: 5px 0;
+    }
+
+    .header_staff_list .header{
+        font-size: 18px;
+    }
+
+    .staff_list_id{
+        width: 100px;
+    }
+    .staff_list_name{
+        width: 500px;
+    }
+    .staff_list_specialization{
+        width: 500px;
+    }
+    .staff_list_avatar{
+        width: 150px;
+    }
+    .staff_list_avatar img{
+        width: 100px;
+    }
+</style>
+
+<script>
+    $(document).ready( function(){
+        intSatffPage()
+    })
+
+    async function intSatffPage(){
+       await getStaff()
+       fillHtmlStaffList()
+    }
+
+    function fillHtmlStaffList(){
+        staff.forEach(el_data => {
+            let html_el = staff_html_element(el_data)
+            $('.staff_list_data').append(html_el)
+        });
+    }
+
+    function staff_html_element(data){
+        let id = data.id
+        let name = data.name
+        let specialization = data.specialization
+        let avatar = data.avatar
+        let html = `
+            <div class="staff_element">
+                <div class="staff_list_id element">${id}</div>
+                <div class="staff_list_name element">${name}</div>
+                <div class="staff_list_specialization element">${specialization}</div>
+                <div class="staff_list_avatar element"><img src="${avatar}" alt=""></div>
+            </div>            
+        `
+        return html
+    }
+
+</script>
+
