@@ -1,14 +1,105 @@
 <!-- t123_block_1 #rec1613353621 StaffPage-->
 
+<style>
+    .uc-comets_el .t396__artboard{
+        opacity: 0.01;
+    }
+</style>
+
 <script>
     let staffComents
+    let visualPatern = []
+    let cssZero = 'uc-comets_el'
+    let cssNameElementsPatern = ['t396__artboard', 'backGround', 'avatar', 'name_user', 'date', 'coment', 'Star_1', 'Star_2', 'Star_3', 'Star_4', 'Star_5']
+    let cssParams = ['left', 'top', 'width', 'height']
+    let notFillElements = ['t396__artboard', 'backGround']
 
     $(document).ready( function(){
         intSatffPage()
     })
 
     async function intSatffPage(){
+        initVisualPatern()
         await getComments()
         staffComents = await getStaffComents(staff_id)
+        await fillVisualPatern()
+        showBlok()
+    }
+
+    async function initVisualPatern(){
+        await cssNameElementsPatern.forEach(el=>{
+            let newElement = {cssName:el}
+            cssParams.forEach( param_item=>{ newElement[param_item] = getPxValue($(`.${cssZero} .${el}`).css(param_item))})
+            if(notFillElements.includes(el)){newElement.fillData = false}else{newElement.fillData = true}
+            visualPatern.push(newElement)
+        })
+        getPaddingBottom('t396__artboard', 'backGround')
+        getPaddingBottom('backGround', 'coment')
+    }
+
+    function getPaddingBottom(cssNameWrap, cssNameBottumElement){
+        let wrapElement = visualPatern.find(item=>item.cssName==cssNameWrap)
+        let lastElement = visualPatern.find(item=>item.cssName==cssNameBottumElement)
+        let paddingBottom = wrapElement.top  + wrapElement.height - lastElement.top - lastElement.height
+        wrapElement.paddingBottom = paddingBottom
+    }
+
+    async function fillVisualPatern(){
+        await fillElements(staffComents[7])
+        await ajastBottoms()
+        await newElements()
+    }
+
+    function newElements(){
+        
+    }
+
+    function ajastBottoms(){
+        let bottmLastEl = getPxValue($(lastEl('.coment')).css('top')) + getPxValue($(lastEl('.coment')).css('height'))
+        let backGround = visualPatern.find(item=>item.cssName=='backGround')
+        let newBottom = bottmLastEl + backGround.paddingBottom
+        let newHeight = newBottom - backGround.top
+        backGround.height = newHeight
+        $('.backGround').css({height:newHeight})
+        
+        let artboard = visualPatern.find(item=>item.cssName=='t396__artboard')
+        let newHeightArtboard = newBottom + artboard.paddingBottom
+        artboard.height = newHeightArtboard
+        $('.t396__artboard').css({height:newHeightArtboard})
+    }
+
+    function fillElements(data){
+        fillElement('name_user',data.user_name)
+        fillElement('date', formatDate(data.date))
+        setRates(data.rating)
+        fillElement('coment', data.text)
+    }
+
+    function fillElement(cssName, value){
+        $(lastEl(`.${cssName} .tn-atom`)).text(value)
+    }
+
+    function setRates(value){
+        value = Number(value)
+        for(let i=1; i<=5; i++){ $(lastEl(`.Star_${i}`)).css({opacity:'0.01'}) }
+        for(let i=1; i<=value; i++){ $(lastEl(`.Star_${i}`)).css({opacity:'1.0'}) }
+    }
+
+    function lastEl(cssSelector){
+        let length = $(cssSelector).length
+        return $(cssSelector)[length-1]
+    }
+
+    function getPxValue(input){
+        return Number(input.split('px')[0])
+    }
+
+    function showBlok(){
+        $('.uc-comets_el .t396__artboard').css({opacity: 1.0})
+    }
+
+    function formatDate(text_data){
+        let d = new Date(text_data)
+        return d.getDate() + ' ' + d.toLocaleString('ru-RU', { month: 'short' }) + ' ' + d.getFullYear()
     }
 </script>
