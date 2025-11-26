@@ -1,0 +1,25 @@
+<script> 
+
+$(document).ready(function(){
+    init()
+})
+
+function whaitReadyElement(selector, func){
+    if(!selector) return false
+    let idInterval = setInterval(()=>{
+        if($(selector).length!=0){
+            clearInterval(idInterval)
+            func()
+        }
+    }, 300)
+}
+
+function init(){
+    whaitReadyElement('button[type="submit"]',  submitStopTilda )
+}
+
+function submitStopTilda(){
+    $('button[type="submit"]').attr({'onclick':'event.stopPropagation()'})
+}
+
+</script>
