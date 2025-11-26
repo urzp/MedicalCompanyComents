@@ -1,0 +1,62 @@
+<script> 
+let partner_token = 'a5w6uwkmnkttn9t6epp4'
+let defResultText
+
+$(document).ready(function(){
+    init()
+})
+
+function whaitReadyElement(selector, func){
+    if(!selector) return false
+    let idInterval = setInterval(()=>{
+        if($(selector).length!=0){
+            clearInterval(idInterval)
+            func()
+        }
+    }, 300)
+}
+
+function init(){
+    whaitReadyElement('button[type="submit"]',  initSubmit )    
+    whaitReadyElement('.result_msg',()=>{defResultText = $('.result_msg').text()})
+}
+
+function initSubmit(){
+    $('button[type="submit"]').attr({'onclick':'event.stopPropagation()'})
+    $('button[type="submit"]').click(newSubmitForm)
+}
+
+async function newSubmitForm(){
+    let login = $('[name="email"]').val()
+    let password = $('[name="password"]').val()
+    let result = await senRequestAuth(login, password)
+    let msq
+    if(result.success){
+        msq = 'API-ключ пользователя: ' + result.data.user_token
+    }else{
+        msq = 'ошибка: '
+        if(!result){ msq = msq + 'не все поля заполнены' }else{ msq = msq + result.meta.message }
+    }
+    updateResultMsg(msq)
+}
+
+function updateResultMsg(msg){
+    $('.result_msg .tn-atom').text(defResultText + ' ' + msg)
+}
+
+async function senRequestAuth(login, password){
+    if(!login||!password) return false
+    let response = await fetch('https://api.yclients.com/api/v1/auth', {  
+        method: 'POST',  
+        headers: {  
+            'Accept':'application/vnd.yclients.v2+json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${partner_token}`
+        },  
+        body: JSON.stringify({ login, password })  
+    }) 
+    response = await response.json()
+    return response
+}
+
+</script>
