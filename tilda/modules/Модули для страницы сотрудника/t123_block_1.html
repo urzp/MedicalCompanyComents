@@ -1,0 +1,14 @@
+<!-- t123_block_1 #rec1613353621 StaffPage-->
+
+<script>
+    let staffComents
+
+    $(document).ready( function(){
+        intSatffPage()
+    })
+
+    async function intSatffPage(){
+        await getComments()
+        staffComents = await getStaffComents(staff_id)
+    }
+</script>

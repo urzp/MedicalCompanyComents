@@ -32,7 +32,7 @@
     }
 
     async function getStaffComents(id_staff){
-        if(!coments){ await getComments() }
+        if(!id_staff){ return []}
         let result = await coments.filter((item)=>{
             return item.master_id == 1225474
         })
