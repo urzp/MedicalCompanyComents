@@ -51,21 +51,25 @@
     }
 
     function newElements(){
-        
+        let newTop = countNewTopBlock()
+        let newAvatar = $(lastEl(`.${cssZero} .avatar`)).clone()
+        newAvatar.css({top:newTop+'px'})
+        newAvatar.appendTo( `.${cssZero} .t396__artboard` )
     }
 
     function ajastBottoms(){
-        let bottmLastEl = getPxValue($(lastEl('.coment')).css('top')) + getPxValue($(lastEl('.coment')).css('height'))
+        let bottmLastEl = getPxValue($(lastEl(`.${cssZero} .coment`)).css('top')) + getPxValue($(lastEl(`.${cssZero} .coment`)).css('height'))
         let backGround = visualPatern.find(item=>item.cssName=='backGround')
         let newBottom = bottmLastEl + backGround.paddingBottom
         let newHeight = newBottom - backGround.top
         backGround.height = newHeight
-        $('.backGround').css({height:newHeight})
+        $(`.${cssZero} .backGround`).css({height:newHeight})
         
         let artboard = visualPatern.find(item=>item.cssName=='t396__artboard')
         let newHeightArtboard = newBottom + artboard.paddingBottom
         artboard.height = newHeightArtboard
-        $('.t396__artboard').css({height:newHeightArtboard})
+        $(`.${cssZero} .t396__artboard`).css({height:newHeightArtboard})
+        $(`.${cssZero} .t396__filter`).css({height:newHeightArtboard})
     }
 
     function fillElements(data){
@@ -77,6 +81,13 @@
 
     function fillElement(cssName, value){
         $(lastEl(`.${cssName} .tn-atom`)).text(value)
+    }
+
+    function countNewTopBlock(){
+        let bottmLastEl = getPxValue($(lastEl(`.${cssZero} .coment`)).css('top')) + getPxValue($(lastEl(`.${cssZero} .coment`)).css('height'))
+        let backGround = visualPatern.find(item=>item.cssName=='backGround')
+        let result = bottmLastEl + backGround.paddingBottom
+        return result
     }
 
     function setRates(value){
@@ -95,7 +106,7 @@
     }
 
     function showBlok(){
-        $('.uc-comets_el .t396__artboard').css({opacity: 1.0})
+        $(`.${cssZero} .t396__artboard`).css({opacity: 1.0})
     }
 
     function formatDate(text_data){
