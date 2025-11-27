@@ -46,13 +46,29 @@
 
     async function fillVisualPatern(){
         await fillElements(staffComents[7])
-        await ajastBottoms()
         await newElements()
+        await ajastBottoms()
     }
 
     function newElements(){
+        let beginTop = visualPatern.find(item=>item.cssName == 'avatar').top
         let newTop = countNewTopBlock()
-        let newAvatar = $(lastEl(`.${cssZero} .avatar`)).clone()
+        let dif_y = newTop - beginTop
+        newElement('avatar', dif_y)
+        newElement('name_user', dif_y)
+        newElement('date', dif_y)
+        newElement('coment', dif_y)
+        newElement(`Star_1`, dif_y)
+        newElement(`Star_2`, dif_y)
+        newElement(`Star_3`, dif_y)
+        newElement(`Star_4`, dif_y)
+        newElement(`Star_5`, dif_y)
+       
+    }
+
+    function newElement(name, dif_y){
+        let newAvatar = $(lastEl(`.${cssZero} .${name}`)).clone()
+        let newTop = dif_y + visualPatern.find(item=>item.cssName == name).top
         newAvatar.css({top:newTop+'px'})
         newAvatar.appendTo( `.${cssZero} .t396__artboard` )
     }
