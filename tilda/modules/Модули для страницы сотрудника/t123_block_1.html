@@ -2,7 +2,7 @@
 
 <style>
     .uc-comets_el {
-        display: none;
+        /* display: none; */
     }
 </style>
 
@@ -10,9 +10,34 @@
     let staffComents
     let visualPatern = []
     let cssZero = 'uc-comets_el'
-    let cssNameElementsPatern = ['t396__artboard', 'backGround', 'avatar', 'name_user', 'date', 'coment', 'Star_1', 'Star_2', 'Star_3', 'Star_4', 'Star_5']
+    let cssNameHtmlPattern = 'htmlPattern'
+    let cssNameMainElements = ['patt_backGround', 'patt_title',]
+    let cssNameElementsCard = ['patt_avatar', 'patt_name_user', 'patt_date', 'patt_coment', 'patt_Star_1', 'patt_Star_2', 'patt_Star_3', 'patt_Star_4', 'patt_Star_5']
+    let cssAdapterTilda_to_Html = {
+        // patt_backGround: 'backGround',
+        patt_title: 'title',
+        patt_avatar: 'avatar',
+        patt_name_user: 'name_user',
+        patt_date: 'date',
+        patt_coment:'comment_text',
+    }
+    let elenentsStyles = []
     let cssParams = ['left', 'top', 'width', 'height']
-    let notFillElements = ['t396__artboard', 'backGround']
+    let cssParams_tn_atom = [
+        'border-radius', 
+        'background-color', 
+        'background-position', 
+        'border-color',
+        'border-style',
+        'box-shadow',
+        'transition',
+        'vertical-align',
+        'color',
+        'font-size',
+        'font-family',
+        'font-weight',
+    ]
+
 
     $(document).ready( function(){
         intSatffPage()
@@ -22,21 +47,96 @@
         initVisualPatern()
         await getComments()
         staffComents = await getStaffComents(staff_id)
-
+        fillData()
         
     }
 
-    async function initVisualPatern(){
-        await cssNameElementsPatern.forEach(el=>{
+    function fillData(){
+        //staffComents.forEach(item=>{
+            let html = createHtmlItem(staffComents[0])
+            $(`.htmlPattern .list_coments`).append(html)
+            html = createHtmlItem(staffComents[1])
+            $(`.htmlPattern .list_coments`).append(html)
+        //})
+    }
 
+    function createHtmlItem(data){
+        let html =`<div class="comment id_${data.id}">
+                        <div class="title_comment">
+                            <div class="avatar"></div>
+                            <div class="main_data_coment">
+                                <div class="name_user">${data.user_name}</div>
+                                <div class="rating_date">
+                                    <div class="rating">
+                                        <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_1">
+                                        <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_2">
+                                        <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_3">
+                                        <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_4">
+                                        <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_5">
+                                    </div>
+                                    <div class="date">${formatDate(data.date)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment_text">${data.text}</div>
+                    </div>`
+        return html
+    }
+
+    async function initVisualPatern(){
+        hiddeTildaPattern()
+        await readElenentsStyles()
+        setInterval(aplyElenentsStyles, 200)
+    }
+
+    function readElenentsStyles(){
+        cssNameMainElements.concat(cssNameElementsCard).forEach(name_item=>{
+           let pattern_element = getElement(name_item)
+           let elenentsStyle = {cssName:name_item}
+           elenentsStyles.push(elenentsStyle)
+           cssParams.forEach(css_item=>{
+                elenentsStyle[css_item] = pattern_element.css(css_item)
+           })
+           pattern_element_atom = getElement(name_item + ' .tn-atom')
+            cssParams_tn_atom.forEach(css_item=>{
+                elenentsStyle[css_item] = pattern_element_atom.css(css_item)
+           })
         })
+    }
+
+    function aplyElenentsStyles(){
+        aplyStylesHtmlPattern()
+        elenentsStyles.forEach(syles_item=>{
+            let cssNameElement_htmlPattern = cssAdapterTilda_to_Html[syles_item.cssName]
+            if(!cssNameElement_htmlPattern) return false
+            cssNameElement_htmlPattern = `.htmlPattern .${cssNameElement_htmlPattern}`
+            $(cssNameElement_htmlPattern).css(syles_item)
+        })
+    }
+
+    function aplyStylesHtmlPattern(){
+        let patt_backGround = elenentsStyles.find(item=>item.cssName='patt_backGround')
+        let left = patt_backGround.left
+        let top = patt_backGround.top
+        $(`.${cssNameHtmlPattern}`).css({left, top})
+    }
+
+    //-----------------
+
+    function hiddeTildaPattern(){
+        cssNameMainElements.forEach(item=>{ getElement(item).css({display:'none'}) }) 
+        cssNameElementsCard.forEach(item=>{ getElement(item).css({display:'none'}) }) 
     }
 
     //  hendel functions
 
-    function lastEl(cssSelector){
-        let length = $(cssSelector).length
-        return $(cssSelector)[length-1]
+    // function lastEl(cssSelector){
+    //     let length = $(cssSelector).length
+    //     return $(cssSelector)[length-1]
+    // }
+
+    function getElement(cssName){
+        return $(`.${cssZero} .${cssName}`)
     }
 
     function getPxValue(input){
