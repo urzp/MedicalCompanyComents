@@ -22,8 +22,9 @@
         initVisualPatern()
         await getComments()
         staffComents = await getStaffComents(staff_id)
-        await fillVisualPatern()
-        showBlok()
+        // await fillVisualPatern()
+        // showBlok()
+        
     }
 
     async function initVisualPatern(){
@@ -45,8 +46,11 @@
     }
 
     async function fillVisualPatern(){
-        await fillElements(staffComents[7])
-        await newElements()
+        
+        staffComents.forEach(async (element, index) => {
+            if(index>0 )await newElements()
+            await fillElements(element)       
+        });
         await ajastBottoms()
     }
 
