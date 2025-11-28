@@ -1,25 +1,38 @@
 <!-- t123_block_1 #rec1613353621 StaffPage-->
 
 <style>
-    .uc-comets_el {
-        /* display: none; */
+    .htmlPattern .backGround {
+        display: none;
     }
+
+    .uc-comets_el .t396__artboard{
+        padding-bottom: 30px;
+    }
+
+
 </style>
 
 <script>
+    let pagination = {
+        initItems:3,
+        current:0,
+        moreShow:3,
+    }
     let staffComents
     let visualPatern = []
     let cssZero = 'uc-comets_el'
     let cssNameHtmlPattern = 'htmlPattern'
     let cssNameMainElements = ['patt_backGround', 'patt_title',]
-    let cssNameElementsCard = ['patt_avatar', 'patt_name_user', 'patt_date', 'patt_coment', 'patt_Star_1', 'patt_Star_2', 'patt_Star_3', 'patt_Star_4', 'patt_Star_5']
+    let cssNameElementsCard = ['patt_avatar', 'patt_name_user', 'patt_date', 'patt_coment', 'patt_Star_1', 'patt_Star_2', 'patt_Star_3', 'patt_Star_4', 'patt_Star_5', 'patt_button_more', 'patt_button_more_title']
     let cssAdapterTilda_to_Html = {
-        // patt_backGround: 'backGround',
+        patt_backGround: 'backGround',
         patt_title: 'title',
         patt_avatar: 'avatar',
         patt_name_user: 'name_user',
         patt_date: 'date',
         patt_coment:'comment_text',
+        patt_button_more:'button_more',
+        patt_button_more_title:'button_more_title',
     }
     let elenentsStyles = []
     let cssParams = ['left', 'top', 'width', 'height']
@@ -29,6 +42,7 @@
         'background-position', 
         'border-color',
         'border-style',
+        'border-width',
         'box-shadow',
         'transition',
         'vertical-align',
@@ -36,7 +50,12 @@
         'font-size',
         'font-family',
         'font-weight',
+        'text-align',
     ]
+    let cssParamsNotCopy = {
+        patt_backGround: ['height'],
+        patt_coment: ['height', 'width'],
+    }
 
 
     $(document).ready( function(){
@@ -47,27 +66,38 @@
         initVisualPatern()
         await getComments()
         staffComents = await getStaffComents(staff_id)
-        fillData()
-        
+        await fillData(pagination.initItems)
+        $('.htmlPattern .title').text('Отзывы')
+        $('.htmlPattern .backGround').fadeIn()
+        initEvents()
     }
 
-    function fillData(){
-        //staffComents.forEach(item=>{
-            let html = createHtmlItem(staffComents[0])
+    function initEvents(){
+        $('.htmlPattern .button_more').click(function(){
+            let max = pagination.current + pagination.moreShow
+            fillData(max)
+        })
+    }
+
+    function fillData(max){
+        staffComents.forEach((item, index)=>{
+            if(index < pagination.current) return false
+            if(index >= max) return false
+            pagination.current++
+            let html = createHtmlItem(item)
             $(`.htmlPattern .list_coments`).append(html)
-            html = createHtmlItem(staffComents[1])
-            $(`.htmlPattern .list_coments`).append(html)
-        //})
+        })
+        if(pagination.current>=staffComents.length) $('.htmlPattern .button_more').fadeOut()
     }
 
     function createHtmlItem(data){
         let html =`<div class="comment id_${data.id}">
                         <div class="title_comment">
-                            <div class="avatar"></div>
+                            <div class="avatar" style="background-image: url(${data.user_avatar});"></div>
                             <div class="main_data_coment">
                                 <div class="name_user">${data.user_name}</div>
                                 <div class="rating_date">
-                                    <div class="rating">
+                                    <div class="rating value_${data.rating}">
                                         <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_1">
                                         <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_2">
                                         <img src="https://static.tildacdn.com/tild3035-3761-4830-b462-353762316230/Star_3.svg" alt="" class="star_3">
@@ -86,7 +116,7 @@
     async function initVisualPatern(){
         hiddeTildaPattern()
         await readElenentsStyles()
-        setInterval(aplyElenentsStyles, 200)
+        setInterval(aplyElenentsStyles, 300)
     }
 
     function readElenentsStyles(){
@@ -95,10 +125,12 @@
            let elenentsStyle = {cssName:name_item}
            elenentsStyles.push(elenentsStyle)
            cssParams.forEach(css_item=>{
+                if(!!cssParamsNotCopy[name_item]&&cssParamsNotCopy[name_item].includes(css_item)) {return false} 
                 elenentsStyle[css_item] = pattern_element.css(css_item)
            })
            pattern_element_atom = getElement(name_item + ' .tn-atom')
             cssParams_tn_atom.forEach(css_item=>{
+                if(!!cssParamsNotCopy[name_item]&&cssParamsNotCopy[name_item].includes(css_item)) {return false} 
                 elenentsStyle[css_item] = pattern_element_atom.css(css_item)
            })
         })
@@ -152,3 +184,4 @@
         return d.getDate() + ' ' + d.toLocaleString('ru-RU', { month: 'short' }) + ' ' + d.getFullYear()
     }
 </script>
+
