@@ -1,8 +1,8 @@
 <!-- t123_block_1 #rec1613353621 StaffPage-->
 
 <style>
-    .uc-comets_el .t396__artboard{
-        opacity: 0.01;
+    .uc-comets_el {
+        display: none;
     }
 </style>
 
@@ -22,99 +22,17 @@
         initVisualPatern()
         await getComments()
         staffComents = await getStaffComents(staff_id)
-        // await fillVisualPatern()
-        // showBlok()
+
         
     }
 
     async function initVisualPatern(){
         await cssNameElementsPatern.forEach(el=>{
-            let newElement = {cssName:el}
-            cssParams.forEach( param_item=>{ newElement[param_item] = getPxValue($(`.${cssZero} .${el}`).css(param_item))})
-            if(notFillElements.includes(el)){newElement.fillData = false}else{newElement.fillData = true}
-            visualPatern.push(newElement)
+
         })
-        getPaddingBottom('t396__artboard', 'backGround')
-        getPaddingBottom('backGround', 'coment')
     }
 
-    function getPaddingBottom(cssNameWrap, cssNameBottumElement){
-        let wrapElement = visualPatern.find(item=>item.cssName==cssNameWrap)
-        let lastElement = visualPatern.find(item=>item.cssName==cssNameBottumElement)
-        let paddingBottom = wrapElement.top  + wrapElement.height - lastElement.top - lastElement.height
-        wrapElement.paddingBottom = paddingBottom
-    }
-
-    async function fillVisualPatern(){
-        
-        staffComents.forEach(async (element, index) => {
-            if(index>0 )await newElements()
-            await fillElements(element)       
-        });
-        await ajastBottoms()
-    }
-
-    function newElements(){
-        let beginTop = visualPatern.find(item=>item.cssName == 'avatar').top
-        let newTop = countNewTopBlock()
-        let dif_y = newTop - beginTop
-        newElement('avatar', dif_y)
-        newElement('name_user', dif_y)
-        newElement('date', dif_y)
-        newElement('coment', dif_y)
-        newElement(`Star_1`, dif_y)
-        newElement(`Star_2`, dif_y)
-        newElement(`Star_3`, dif_y)
-        newElement(`Star_4`, dif_y)
-        newElement(`Star_5`, dif_y)
-       
-    }
-
-    function newElement(name, dif_y){
-        let newAvatar = $(lastEl(`.${cssZero} .${name}`)).clone()
-        let newTop = dif_y + visualPatern.find(item=>item.cssName == name).top
-        newAvatar.css({top:newTop+'px'})
-        newAvatar.appendTo( `.${cssZero} .t396__artboard` )
-    }
-
-    function ajastBottoms(){
-        let bottmLastEl = getPxValue($(lastEl(`.${cssZero} .coment`)).css('top')) + getPxValue($(lastEl(`.${cssZero} .coment`)).css('height'))
-        let backGround = visualPatern.find(item=>item.cssName=='backGround')
-        let newBottom = bottmLastEl + backGround.paddingBottom
-        let newHeight = newBottom - backGround.top
-        backGround.height = newHeight
-        $(`.${cssZero} .backGround`).css({height:newHeight})
-        
-        let artboard = visualPatern.find(item=>item.cssName=='t396__artboard')
-        let newHeightArtboard = newBottom + artboard.paddingBottom
-        artboard.height = newHeightArtboard
-        $(`.${cssZero} .t396__artboard`).css({height:newHeightArtboard})
-        $(`.${cssZero} .t396__filter`).css({height:newHeightArtboard})
-    }
-
-    function fillElements(data){
-        fillElement('name_user',data.user_name)
-        fillElement('date', formatDate(data.date))
-        setRates(data.rating)
-        fillElement('coment', data.text)
-    }
-
-    function fillElement(cssName, value){
-        $(lastEl(`.${cssName} .tn-atom`)).text(value)
-    }
-
-    function countNewTopBlock(){
-        let bottmLastEl = getPxValue($(lastEl(`.${cssZero} .coment`)).css('top')) + getPxValue($(lastEl(`.${cssZero} .coment`)).css('height'))
-        let backGround = visualPatern.find(item=>item.cssName=='backGround')
-        let result = bottmLastEl + backGround.paddingBottom
-        return result
-    }
-
-    function setRates(value){
-        value = Number(value)
-        for(let i=1; i<=5; i++){ $(lastEl(`.Star_${i}`)).css({opacity:'0.01'}) }
-        for(let i=1; i<=value; i++){ $(lastEl(`.Star_${i}`)).css({opacity:'1.0'}) }
-    }
+    //  hendel functions
 
     function lastEl(cssSelector){
         let length = $(cssSelector).length
