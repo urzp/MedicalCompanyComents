@@ -64,8 +64,9 @@
 
     async function intSatffPage(){
         initVisualPatern()
-        await getComments()
-        staffComents = await getStaffComents(staff_id)
+        await getComments(staff_id)
+        staffComents = await filterComents()
+        if(staffComents.length==0) return false
         await fillData(pagination.initItems)
         $('.htmlPattern .title').text('Отзывы')
         $('.htmlPattern .backGround').fadeIn()
@@ -76,7 +77,14 @@
         $('.htmlPattern .button_more').click(function(){
             let max = pagination.current + pagination.moreShow
             fillData(max)
+            riseZeroBlok()
         })
+    }
+
+    function riseZeroBlok(addHeight=450){
+        let newHeight =  $('.uc-comets_el .t396__artboard').height() + addHeight
+        $('.uc-comets_el .t396__artboard').css({height: newHeight + 'px'})
+        $('.uc-comets_el .t396__filter').css({height: newHeight + 'px'})
     }
 
     function fillData(max){
@@ -115,11 +123,14 @@
 
     async function initVisualPatern(){
         hiddeTildaPattern()
-        await readElenentsStyles()
-        setInterval(aplyElenentsStyles, 300)
+        setInterval(async ()=>{
+            await readElenentsStyles()
+            aplyElenentsStyles()
+        }, 300)
     }
 
     function readElenentsStyles(){
+        elenentsStyles = []
         cssNameMainElements.concat(cssNameElementsCard).forEach(name_item=>{
            let pattern_element = getElement(name_item)
            let elenentsStyle = {cssName:name_item}
@@ -155,17 +166,17 @@
 
     //-----------------
 
-    function hiddeTildaPattern(){
-        cssNameMainElements.forEach(item=>{ getElement(item).css({display:'none'}) }) 
-        cssNameElementsCard.forEach(item=>{ getElement(item).css({display:'none'}) }) 
-    }
-
     //  hendel functions
 
     // function lastEl(cssSelector){
     //     let length = $(cssSelector).length
     //     return $(cssSelector)[length-1]
     // }
+
+    function hiddeTildaPattern(){
+        cssNameMainElements.forEach(item=>{ getElement(item).css({display:'none'}) }) 
+        cssNameElementsCard.forEach(item=>{ getElement(item).css({display:'none'}) }) 
+    }
 
     function getElement(cssName){
         return $(`.${cssZero} .${cssName}`)

@@ -18,8 +18,8 @@
         return result
     }
 
-    async function getComments(){
-        let result = await fetch('https://api.yclients.com/api/v1/comments/421068', {  
+    async function getComments(id_master){
+        let result = await fetch(`https://api.yclients.com/api/v1/comments/421068?staff_id=${id_master}`, {  
             method: 'GET',  
             headers: {  
                 'Accept':'application/vnd.yclients.v2+json',
@@ -31,10 +31,9 @@
         if(result.success){ coments = result.data }
     }
 
-    async function getStaffComents(id_staff){
-        if(!id_staff){ return []}
+    async function filterComents(){
         let result = await coments.filter((item)=>{
-            return item.master_id == id_staff
+            return  item.text!=""
         })
         return result
     }
